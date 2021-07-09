@@ -34,12 +34,15 @@ func DownloadFile(uri, filename string) error {
 		return err
 	}
 	defer resp.Body.Close()
+
 	// Create our progress reporter and pass it to be used alongside our writer
-	counter := &WriteCounter{}
+	counter := NewWriteCounter(int(resp.ContentLength))
+	counter.Start()
 	if _, err = io.Copy(out, io.TeeReader(resp.Body, counter)); err != nil {
 		out.Close()
 		return err
 	}
+	counter.Finish()
 
 	out.Close()
 	if err = os.Rename(filename+".tmp", filename); err != nil {
