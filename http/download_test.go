@@ -48,8 +48,9 @@ func (s *httpSuite) TestCreateFile() {
 	Client = &MockClient{
 		MockGet: func(uri string) (*http.Response, error) {
 			return &http.Response{
-				StatusCode: 200,
-				Body:       r,
+				StatusCode:    200,
+				Body:          r,
+				ContentLength: int64(len([]byte(output))),
 			}, nil
 		},
 	}

@@ -3,6 +3,8 @@ module github.com/fizyk/magex
 go 1.16
 
 require (
+	github.com/cheggaaa/pb/v3 v3.0.8 // indirect
+	github.com/dustin/go-humanize v1.0.0 // indirect
 	github.com/google/go-github/v35 v35.3.0
 	github.com/google/uuid v1.2.0
 	github.com/hashicorp/go-version v1.3.0
