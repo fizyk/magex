@@ -19,6 +19,8 @@ func init() {
 	Client = &http.Client{}
 }
 
+// DownloadFile downloads file from the internet, based on the uri.
+// based on the https://golangcode.com/download-a-file-with-progress/ and comments
 func DownloadFile(uri, filename string) error {
 
 	// Create the file, but give it a tmp file extension, this means we won't overwrite a
