@@ -1,8 +1,9 @@
 package http
 
 import (
-	"io/ioutil"
+	"io"
 	"net/http"
+	"os"
 )
 
 // HTTPClient interface
@@ -19,15 +20,29 @@ func init() {
 }
 
 func DownloadFile(uri, filename string) error {
-	resp, err := Client.Get(uri)
+
+	// Create the file, but give it a tmp file extension, this means we won't overwrite a
+	// file until it's downloaded, but we'll remove the tmp extension once downloaded.
+	out, err := os.Create(filename + ".tmp")
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
-	if body, err := ioutil.ReadAll(resp.Body); err != nil {
+
+	resp, err := Client.Get(uri)
+	if err != nil {
+		out.Close()
 		return err
-		// Write downloaded http locally
-	} else if err := ioutil.WriteFile(filename, body, 0644); err != nil {
+	}
+	defer resp.Body.Close()
+	// Create our progress reporter and pass it to be used alongside our writer
+	counter := &WriteCounter{}
+	if _, err = io.Copy(out, io.TeeReader(resp.Body, counter)); err != nil {
+		out.Close()
+		return err
+	}
+
+	out.Close()
+	if err = os.Rename(filename+".tmp", filename); err != nil {
 		return err
 	}
 	return nil
