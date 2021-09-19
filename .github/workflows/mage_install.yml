@@ -19,4 +19,6 @@ jobs:
       - name: Test mage:install command without mage
         run: go run main.go mage:install
       - name: Test mage:install command with mage
-        run: go run main.go mage:install
+        run: mage mage:install
+      - name: Test mage:install command with mage
+        run: mage mage:installversion 1.11.0

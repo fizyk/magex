@@ -49,6 +49,24 @@ func Install() error {
 	if err != nil {
 		return err
 	}
+	return install(latestVersion, downloadURL)
+}
+
+// InstallVersion installs given mage version
+func InstallVersion(version string) error {
+	downloadURL, latestVersion, err := github.Version(
+		"magefile",
+		"mage",
+		fmt.Sprintf("v%s", version),
+		filter,
+	)
+	if err != nil {
+		return err
+	}
+	return install(latestVersion, downloadURL)
+}
+
+func install(latestVersion *version.Version, downloadURL string) error {
 	if file.Exists(fmt.Sprintf("%s/%s", binPath, exec)) {
 		currentVersion, err := mageVersion()
 		if err != nil {
