@@ -54,7 +54,7 @@ func Install() error {
 
 // InstallVersion installs given mage version
 func InstallVersion(version string) error {
-	downloadURL, latestVersion, err := github.Version(
+	downloadURL, givenVersion, err := github.Version(
 		"magefile",
 		"mage",
 		fmt.Sprintf("v%s", version),
@@ -63,7 +63,7 @@ func InstallVersion(version string) error {
 	if err != nil {
 		return err
 	}
-	return install(latestVersion, downloadURL)
+	return install(givenVersion, downloadURL)
 }
 
 func install(latestVersion *version.Version, downloadURL string) error {
