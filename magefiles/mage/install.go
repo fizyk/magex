@@ -5,6 +5,7 @@ import (
 	"github.com/fizyk/magex/file"
 	"github.com/fizyk/magex/github"
 	"github.com/fizyk/magex/http"
+	"github.com/fizyk/magex/lib/golang"
 	"github.com/hashicorp/go-version"
 	"github.com/magefile/mage/sh"
 	"os"
@@ -20,7 +21,6 @@ var assetFilterMap = map[string]string{
 
 const (
 	tarFile              string = "mage.tar.gz"
-	binPath              string = "/usr/local/bin"
 	exec                 string = "mage"
 	versionRegexpPattern string = "([\\d]+\\.[\\d]+(\\.[\\d]+)?)"
 )
@@ -46,10 +46,11 @@ func mageVersion() (*version.Version, error) {
 // Install installs latest mage version
 func Install() error {
 	downloadURL, latestVersion, err := github.Latest("magefile", "mage", filter)
+	fmt.Printf("Attempting to install version %s\n", latestVersion)
 	if err != nil {
 		return err
 	}
-	return install(latestVersion, downloadURL)
+	return install(latestVersion, downloadURL, golang.BinPath())
 }
 
 // InstallVersion installs given mage version
@@ -63,16 +64,15 @@ func InstallVersion(version string) error {
 	if err != nil {
 		return err
 	}
-	return install(givenVersion, downloadURL)
+	return install(givenVersion, downloadURL, golang.BinPath())
 }
 
-func install(latestVersion *version.Version, downloadURL string) error {
+func install(latestVersion *version.Version, downloadURL, binPath string) error {
 	if file.Exists(fmt.Sprintf("%s/%s", binPath, exec)) {
 		currentVersion, err := mageVersion()
 		if err != nil {
-			return err
-		}
-		if latestVersion.LessThanOrEqual(currentVersion) {
+			fmt.Printf("Could not determine mage's version, got %s\n Attempting to do a fresh install.", err.Error())
+		} else if latestVersion.LessThanOrEqual(currentVersion) {
 			fmt.Printf("Version %s already installed\n", currentVersion.String())
 			return nil
 		} else {
@@ -89,7 +89,7 @@ func install(latestVersion *version.Version, downloadURL string) error {
 	if err := sh.Run("tar", "zxvf", tarFile, exec); err != nil {
 		return err
 	}
-	if err := sh.Run("sudo", "mv", "-f", exec, binPath); err != nil {
+	if err := sh.Run("mv", "-f", exec, binPath); err != nil {
 		return err
 	}
 	return os.Remove(tarFile)
