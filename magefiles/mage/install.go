@@ -68,7 +68,8 @@ func InstallVersion(version string) error {
 }
 
 func install(latestVersion *version.Version, downloadURL, binPath string) error {
-	if file.Exists(fmt.Sprintf("%s/%s", binPath, exec)) {
+	execPath := fmt.Sprintf("%s/%s", binPath, exec)
+	if file.Exists(execPath) {
 		currentVersion, err := mageVersion()
 		if err != nil {
 			fmt.Printf("Could not determine mage's version, got %s\n Attempting to do a fresh install.", err.Error())
@@ -89,7 +90,7 @@ func install(latestVersion *version.Version, downloadURL, binPath string) error 
 	if err := sh.Run("tar", "zxvf", tarFile, exec); err != nil {
 		return err
 	}
-	if err := sh.Run("mv", "-f", exec, binPath); err != nil {
+	if err := sh.Run("mv", "-f", exec, execPath); err != nil {
 		return err
 	}
 	return os.Remove(tarFile)
