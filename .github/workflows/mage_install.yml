@@ -15,10 +15,10 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.16
+          go-version: 1.19
       - name: Test mage:install command without mage
         run: go run main.go mage:install
       - name: Test mage:install command with mage
         run: mage mage:install
       - name: Test mage:install command with mage
-        run: mage mage:installversion 1.11.0
+        run: mage mage:installversion 1.14.0
