@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/cheggaaa/pb/v3 v3.1.4
 	github.com/google/go-github/v35 v35.3.0
-	github.com/google/uuid v1.4.0
+	github.com/google/uuid v1.5.0
 	github.com/hashicorp/go-version v1.6.0
 	github.com/magefile/mage v1.15.0
 	github.com/stretchr/testify v1.8.4
