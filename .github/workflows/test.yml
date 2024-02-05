@@ -23,7 +23,7 @@ jobs:
           version: latest
           args: go:test
 
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v4
         with:
           flags: unittests # optional
           fail_ci_if_error: false # optional (default = false)
